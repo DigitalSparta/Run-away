@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Убегающая кнопка и свидание</title>
+  <title>Ха-ха, не поймаешь!</title>
   <style>
     body {
       margin: 0;
@@ -23,11 +23,11 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: transform 0.2s ease;
     }
 
     #runaway-btn {
-      background-color: #ff6666;
+      background-color: #ff4444;
       color: white;
     }
 
@@ -58,19 +58,12 @@
       border-radius: 50%;
     }
 
-    .heart::before {
-      top: -10px;
-      left: 0;
-    }
-
-    .heart::after {
-      left: -10px;
-      top: 0;
-    }
+    .heart::before { top: -10px; left: 0; }
+    .heart::after { left: -10px; top: 0; }
 
     @keyframes fall {
       to {
-        transform: translateY(100vh) rotate(360deg);
+        transform: translateY(100vh) rotate(720deg);
         opacity: 0;
       }
     }
@@ -78,7 +71,7 @@
 </head>
 <body>
 
-  <button id="runaway-btn">Поймай меня!</button>
+  <button id="runaway-btn">Хи-хи, не поймаешь!</button>
   <button id="accept-btn">Хорошо, любимый, я пойду на свидание 💕</button>
 
   <script>
@@ -86,7 +79,7 @@
 
     document.addEventListener('mousemove', (e) => {
       const rect = btn.getBoundingClientRect();
-      const distance = 120;
+      const triggerDistance = 200;
       const mouseX = e.clientX;
       const mouseY = e.clientY;
 
@@ -96,17 +89,17 @@
       const deltaX = mouseX - btnX;
       const deltaY = mouseY - btnY;
 
-      const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      const dist = Math.sqrt(deltaX ** 2 + deltaY ** 2);
 
-      if (dist < distance) {
+      if (dist < triggerDistance) {
         const angle = Math.atan2(deltaY, deltaX);
-        const moveX = -Math.cos(angle) * 150 + (Math.random() * 100 - 50);
-        const moveY = -Math.sin(angle) * 150 + (Math.random() * 100 - 50);
+        const moveX = -Math.cos(angle) * 300 + (Math.random() * 300 - 150);
+        const moveY = -Math.sin(angle) * 300 + (Math.random() * 300 - 150);
 
         let newLeft = btn.offsetLeft + moveX;
         let newTop = btn.offsetTop + moveY;
 
-        const padding = 20;
+        const padding = 30;
         newLeft = Math.min(window.innerWidth - rect.width - padding, Math.max(padding, newLeft));
         newTop = Math.min(window.innerHeight - rect.height - padding, Math.max(padding, newTop));
 
@@ -115,7 +108,26 @@
       }
     });
 
-    // Heart effect
+    // Бонус: периодически подпрыгивает и пугает
+    setInterval(() => {
+      const rect = btn.getBoundingClientRect();
+      let moveX = Math.random() * 60 - 30;
+      let moveY = Math.random() * 60 - 30;
+
+      let newLeft = btn.offsetLeft + moveX;
+      let newTop = btn.offsetTop + moveY;
+
+      const padding = 30;
+      newLeft = Math.min(window.innerWidth - rect.width - padding, Math.max(padding, newLeft));
+      newTop = Math.min(window.innerHeight - rect.height - padding, Math.max(padding, newTop));
+
+      btn.style.left = `${newLeft}px`;
+      btn.style.top = `${newTop}px`;
+    }, 1500);
+
+    // Hearts
+    const acceptBtn = document.getElementById('accept-btn');
+
     function createHeart(x, y) {
       const heart = document.createElement('div');
       heart.className = 'heart';
@@ -125,7 +137,6 @@
       setTimeout(() => heart.remove(), 3000);
     }
 
-    const acceptBtn = document.getElementById('accept-btn');
     acceptBtn.addEventListener('click', () => {
       const count = 30;
       for (let i = 0; i < count; i++) {
@@ -137,11 +148,9 @@
       }
 
       setTimeout(() => {
-        // Замените ссылку ниже на вашу Tilda страницу
         window.location.href = 'https://ваша-ссылка-на-тилду.tilda.ws';
       }, 3000);
     });
   </script>
-
 </body>
 </html>
