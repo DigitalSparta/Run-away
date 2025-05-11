@@ -1,48 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Убегающая кнопка</title>
   <style>
     body {
-      text-align: center;
-      margin-top: 100px;
-      font-family: sans-serif;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
     }
-    #runBtn {
+
+    #runaway-btn {
+      position: absolute;
       padding: 15px 30px;
-      background-color: #f44336;
+      font-size: 18px;
+      background-color: #ff6666;
       color: white;
       border: none;
-      border-radius: 8px;
-      position: absolute;
-      transition: 0.3s ease;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
     }
   </style>
 </head>
 <body>
-  <h2>Попробуй нажать на кнопку 🎁</h2>
-  <button id="runBtn">Нажми меня</button>
+
+  <button id="runaway-btn">Поймай меня!</button>
 
   <script>
-    const button = document.getElementById('runBtn');
+    const btn = document.getElementById('runaway-btn');
 
     document.addEventListener('mousemove', (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      const btnRect = button.getBoundingClientRect();
-      const distance = 100;
+      const rect = btn.getBoundingClientRect();
+      const distance = 120;
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
 
-      const dx = x - (btnRect.left + btnRect.width / 2);
-      const dy = y - (btnRect.top + btnRect.height / 2);
-      const d = Math.sqrt(dx * dx + dy * dy);
+      const btnX = rect.left + rect.width / 2;
+      const btnY = rect.top + rect.height / 2;
 
-      if (d < distance) {
-        const offsetX = (Math.random() - 0.5) * 300;
-        const offsetY = (Math.random() - 0.5) * 300;
-        button.style.left = `${Math.min(window.innerWidth - 100, Math.max(0, btnRect.left + offsetX))}px`;
-        button.style.top = `${Math.min(window.innerHeight - 100, Math.max(0, btnRect.top + offsetY))}px`;
+      const deltaX = mouseX - btnX;
+      const deltaY = mouseY - btnY;
+
+      const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      if (dist < distance) {
+        const angle = Math.atan2(deltaY, deltaX);
+        const moveX = -Math.cos(angle) * 150 + (Math.random() * 100 - 50);
+        const moveY = -Math.sin(angle) * 150 + (Math.random() * 100 - 50);
+
+        let newLeft = btn.offsetLeft + moveX;
+        let newTop = btn.offsetTop + moveY;
+
+        // Ограничения в пределах окна
+        const padding = 20;
+        newLeft = Math.min(window.innerWidth - rect.width - padding, Math.max(padding, newLeft));
+        newTop = Math.min(window.innerHeight - rect.height - padding, Math.max(padding, newTop));
+
+        btn.style.left = `${newLeft}px`;
+        btn.style.top = `${newTop}px`;
       }
     });
   </script>
+
 </body>
 </html>
