@@ -69,12 +69,13 @@
 </head>
 <body>
 
-  <button id="runaway-btn">Отказ!</button>
+  <button id="runaway-btn">Хи-хи, не поймаешь!</button>
 
   <script>
     const btn = document.getElementById('runaway-btn');
     let clickCount = 0; // Счётчик для подсчёта нажатий
 
+    // Функция для получения противоположной стороны экрана
     function getOppositePosition(x, y, width, height) {
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
@@ -82,6 +83,15 @@
         x: screenWidth - x - width,
         y: screenHeight - y - height
       };
+    }
+
+    // Функция для получения случайной позиции на экране
+    function getRandomPosition() {
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      const x = Math.random() * (screenWidth - 100);
+      const y = Math.random() * (screenHeight - 100);
+      return { x, y };
     }
 
     document.addEventListener('mousemove', (e) => {
@@ -124,7 +134,7 @@
       clickCount++;  // Увеличиваем счётчик нажатий
 
       showHeart();
-      createNewButton();
+      createNewButton(rect.left, rect.top);
     });
 
     setInterval(() => {
@@ -158,10 +168,23 @@
       }, 3000);
     }
 
-    function createNewButton() {
+    function createNewButton(prevX, prevY) {
       const newButton = document.createElement('button');
       newButton.classList.add('new-btn');
       newButton.textContent = "Хорошо, любимый, я пойду на свидание!";
+
+      // Если это первое нажатие, ставим по центру
+      if (clickCount === 1) {
+        const centerX = window.innerWidth / 2 - newButton.offsetWidth / 2;
+        const centerY = window.innerHeight / 2 - newButton.offsetHeight / 2;
+        newButton.style.left = `${centerX}px`;
+        newButton.style.top = `${centerY}px`;
+      } else {
+        // Иначе ставим в место предыдущего нажатия
+        newButton.style.left = `${prevX}px`;
+        newButton.style.top = `${prevY}px`;
+      }
+
       document.body.appendChild(newButton);
 
       // Плавно показываем кнопку
