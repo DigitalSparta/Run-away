@@ -1,35 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Убегающая кнопка</title>
+  <title>Убегающая кнопка и свидание</title>
   <style>
     body {
-      height: 100vh;
       margin: 0;
+      height: 100vh;
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #f0f0f0;
+      flex-direction: column;
+      background: #fff0f5;
+      font-family: sans-serif;
     }
 
-    #runaway-btn {
+    #runaway-btn, #accept-btn {
       position: absolute;
       padding: 15px 30px;
       font-size: 18px;
-      background-color: #ff6666;
-      color: white;
       border: none;
       border-radius: 10px;
       cursor: pointer;
       transition: transform 0.3s ease;
+    }
+
+    #runaway-btn {
+      background-color: #ff6666;
+      color: white;
+    }
+
+    #accept-btn {
+      position: relative;
+      margin-top: 300px;
+      background-color: #8a2be2;
+      color: white;
+      z-index: 2;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: fall 3s linear forwards;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
 
   <button id="runaway-btn">Поймай меня!</button>
+  <button id="accept-btn">Хорошо, любимый, я пойду на свидание 💕</button>
 
   <script>
     const btn = document.getElementById('runaway-btn');
@@ -56,7 +106,6 @@
         let newLeft = btn.offsetLeft + moveX;
         let newTop = btn.offsetTop + moveY;
 
-        // Ограничения в пределах окна
         const padding = 20;
         newLeft = Math.min(window.innerWidth - rect.width - padding, Math.max(padding, newLeft));
         newTop = Math.min(window.innerHeight - rect.height - padding, Math.max(padding, newTop));
@@ -64,6 +113,33 @@
         btn.style.left = `${newLeft}px`;
         btn.style.top = `${newTop}px`;
       }
+    });
+
+    // Heart effect
+    function createHeart(x, y) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = `${x}px`;
+      heart.style.top = `${y}px`;
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    const acceptBtn = document.getElementById('accept-btn');
+    acceptBtn.addEventListener('click', () => {
+      const count = 30;
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const x = Math.random() * window.innerWidth;
+          const y = Math.random() * -100;
+          createHeart(x, y);
+        }, i * 100);
+      }
+
+      setTimeout(() => {
+        // Замените ссылку ниже на вашу Tilda страницу
+        window.location.href = 'https://ваша-ссылка-на-тилду.tilda.ws';
+      }, 3000);
     });
   </script>
 
