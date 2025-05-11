@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Почти поймала!</title>
+  <title>Сюрприз!</title>
   <style>
     body {
       margin: 0;
@@ -16,7 +16,7 @@
       font-family: sans-serif;
     }
 
-    #runaway-btn, #accept-btn {
+    #runaway-btn, .accept-btn {
       position: absolute;
       padding: 15px 30px;
       font-size: 18px;
@@ -31,53 +31,49 @@
       color: white;
     }
 
-    #accept-btn {
-      position: relative;
-      margin-top: 300px;
+    .accept-btn {
       background-color: #8a2be2;
       color: white;
       z-index: 2;
     }
 
-    .heart {
+    .popup-heart {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      transform: rotate(45deg);
-      animation: fall 3s linear forwards;
-      z-index: 1;
+      font-size: 40px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.5);
+      opacity: 0;
+      transition: all 1s ease;
+      z-index: 5;
     }
 
-    .heart::before,
-    .heart::after {
-      content: '';
+    .popup-heart.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .new-btn {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      border-radius: 50%;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #ff1493;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      display: none;
     }
 
-    .heart::before { top: -10px; left: 0; }
-    .heart::after { left: -10px; top: 0; }
-
-    @keyframes fall {
-      to {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <button id="runaway-btn">Нажать чтобы понеривировать Абылая!</button>
-  <button id="accept-btn">Хорошо, любимый, я пойду на свидание💕</button>
+  <button id="runaway-btn">Отказ!</button>
 
   <script>
     const btn = document.getElementById('runaway-btn');
-    const acceptBtn = document.getElementById('accept-btn');
+    let clickCount = 0; // Счётчик для подсчёта нажатий
 
     function getOppositePosition(x, y, width, height) {
       const screenWidth = window.innerWidth;
@@ -122,14 +118,15 @@
     btn.addEventListener('click', () => {
       const rect = btn.getBoundingClientRect();
       const pos = getOppositePosition(rect.left, rect.top, rect.width, rect.height);
-
       btn.style.left = `${pos.x}px`;
       btn.style.top = `${pos.y}px`;
 
-      createHeart(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      clickCount++;  // Увеличиваем счётчик нажатий
+
+      showHeart();
+      createNewButton();
     });
 
-    // Бонус: периодически дрожит
     setInterval(() => {
       const rect = btn.getBoundingClientRect();
       let moveX = Math.random() * 40 - 20;
@@ -146,29 +143,38 @@
       btn.style.top = `${newTop}px`;
     }, 1800);
 
-    function createHeart(x, y) {
+    function showHeart() {
       const heart = document.createElement('div');
-      heart.className = 'heart';
-      heart.style.left = `${x}px`;
-      heart.style.top = `${y}px`;
+      heart.className = 'popup-heart';
+      heart.textContent = '💖'; // Эмодзи сердечка
       document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 3000);
-    }
-
-    acceptBtn.addEventListener('click', () => {
-      const count = 30;
-      for (let i = 0; i < count; i++) {
-        setTimeout(() => {
-          const x = Math.random() * window.innerWidth;
-          const y = Math.random() * -100;
-          createHeart(x, y);
-        }, i * 100);
-      }
 
       setTimeout(() => {
-        window.location.href = 'https://ваша-ссылка-на-тилду.tilda.ws';
+        heart.classList.add('show');
+      }, 100);
+
+      setTimeout(() => {
+        heart.remove();
       }, 3000);
-    });
+    }
+
+    function createNewButton() {
+      const newButton = document.createElement('button');
+      newButton.classList.add('new-btn');
+      newButton.textContent = "Хорошо, любимый, я пойду на свидание!";
+      document.body.appendChild(newButton);
+
+      // Плавно показываем кнопку
+      setTimeout(() => {
+        newButton.style.display = 'inline-block';
+      }, 300);
+
+      newButton.addEventListener('click', () => {
+        window.location.href = 'https://ваша-ссылка-на-тилду.tilda.ws';
+      });
+    }
+
   </script>
+
 </body>
 </html>
