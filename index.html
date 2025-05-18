@@ -169,33 +169,34 @@
     }
 
     function createNewButton(prevX, prevY) {
-      const newButton = document.createElement('button');
-      newButton.classList.add('new-btn');
-      newButton.textContent = "Хорошо, любимый, я соблазнена, я пойду на свидание!";
+  const newButton = document.createElement('button');
+  newButton.classList.add('new-btn');
+  newButton.textContent = "Хорошо, любимый, я соблазнена, я пойду на свидание!";
 
-      // Если это первое нажатие, ставим по центру
-      if (clickCount === 1) {
-        const centerX = window.innerWidth / 2 - newButton.offsetWidth / 2;
-        const centerY = window.innerHeight / 2 - newButton.offsetHeight / 2;
-        newButton.style.left = `${centerX}px`;
-        newButton.style.top = `${centerY}px`;
-      } else {
-        // Иначе ставим в место предыдущего нажатия
-        newButton.style.left = `${prevX}px`;
-        newButton.style.top = `${prevY}px`;
-      }
+  // Сначала добавим кнопку в документ, чтобы она получила размеры
+  newButton.style.display = 'inline-block';
+  document.body.appendChild(newButton);
 
-      document.body.appendChild(newButton);
+  // Теперь можно узнать размеры
+  const btnWidth = newButton.offsetWidth;
+  const btnHeight = newButton.offsetHeight;
 
-      // Плавно показываем кнопку
-      setTimeout(() => {
-        newButton.style.display = 'inline-block';
-      }, 300);
+  if (clickCount === 1) {
+    // Центр экрана
+    const centerX = (window.innerWidth - btnWidth) / 2;
+    const centerY = (window.innerHeight - btnHeight) / 2;
+    newButton.style.left = `${centerX}px`;
+    newButton.style.top = `${centerY}px`;
+  } else {
+    // Там, где была поймана убегающая кнопка
+    newButton.style.left = `${prevX}px`;
+    newButton.style.top = `${prevY}px`;
+  }
 
-      newButton.addEventListener('click', () => {
-        window.location.href = 'http://krolycat.tilda.ws/';
-      });
-    }
+  newButton.addEventListener('click', () => {
+    window.location.href = 'https://krolycat.tilda.ws/';
+  });
+}
 
   </script>
 
